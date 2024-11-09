@@ -3,6 +3,9 @@ import pandas as pd
 import folium
 import json
 
+build_folder = Path(__file__).parent / "build"
+build_folder.mkdir(exist_ok=True)
+
 election = pd.read_csv(
     "USPresPct.txt", 
     delimiter=";",
@@ -62,4 +65,4 @@ choropleth = folium.Choropleth(
 )
 choropleth.add_to(m)
 
-m.save("index.html")
+m.save(build_folder / "index.html")
