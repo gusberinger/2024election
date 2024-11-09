@@ -59,7 +59,7 @@ choropleth = folium.Choropleth(
     threshold_scale=[0, 20, 40, 60, 80, 100],
     bins=2,
     overlay=True,
-    legend_name='Perc (%)'
+    legend_name='Percentage of Vote Won by DFL (%)'
 )
 choropleth.add_to(m)
 
