@@ -14,8 +14,10 @@ pyproj==3.7.0
 python-dateutil==2.9.0.post0
 pytz==2024.2
 requests==2.32.3
+ruff==0.7.3
 shapely==2.0.6
 six==1.16.0
+tqdm==4.67.0
 tzdata==2024.2
 urllib3==2.2.3
 xyzservices==2024.9.0
