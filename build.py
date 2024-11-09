@@ -48,27 +48,45 @@ for feature in geojson["features"]:
     feature["properties"]["PrecinctCountyCode"] = new_code
 
     election_data = election_filtered[election_filtered["PrecinctCountyCode"] == new_code].iloc[0]
-    if election_data.Total  == 0:
+    feature["properties"]["Total"] = int(election_data["Total"])
+    feature["properties"]["Votes"] = int(election_data["Votes"])
+    feature["properties"]["Perc"] = float(election_data["Perc"])
+    if election_data.Total == 0:
         to_delete.append(feature)
 
 for feature in to_delete:
     geojson["features"].remove(feature)
 
 m = folium.Map(location=[46.2, -93.093124], zoom_start=7)
-folium.GeoJson(geojson).add_to(m)
+
 
 choropleth = folium.Choropleth(
     geo_data=geojson,
     data=election_filtered,
-    columns=['PrecinctCountyCode', 'Perc'],  # Replace 'PrecinctID' with the appropriate unique identifier
+    columns=['PrecinctCountyCode', 'Perc'],
     key_on='feature.properties.PrecinctCountyCode',
     fill_color='RdBu',
     fill_opacity=0.7,
-    line_opacity=0.2,
     bins=10,
     overlay=True,
     legend_name='Percentage of Vote Won by DFL (%)'
 )
+
+geojson_layer = folium.GeoJson(
+    geojson,
+    tooltip=folium.GeoJsonTooltip(
+        fields=['PrecinctCountyCode', 'Votes', 'Perc', 'Total'],
+        aliases=['Precinct Code:', 'DFL Votes:', 'DFL %:', 'Total Votes:'],
+        localize=True
+    ),
+    style_function=lambda x: {
+        'fillOpacity': 0,  # Transparent fill so it won't override the Choropleth
+        'color': 'transparent'  # Transparent border
+    }
+)
+
 choropleth.add_to(m)
+geojson_layer.add_to(m)
+
 
 m.save(build_folder / "index.html")
