@@ -62,4 +62,4 @@ choropleth = folium.Choropleth(
 )
 choropleth.add_to(m)
 
-m.save("map.html")
+m.save("index.html")
