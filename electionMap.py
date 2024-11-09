@@ -56,8 +56,7 @@ choropleth = folium.Choropleth(
     fill_color='RdBu',
     fill_opacity=0.7,
     line_opacity=0.2,
-    threshold_scale=[0, 20, 40, 60, 80, 100],
-    bins=2,
+    threshold_scale=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
     overlay=True,
     legend_name='Percentage of Vote Won by DFL (%)'
 )
