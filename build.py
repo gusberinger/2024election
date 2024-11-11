@@ -1,4 +1,5 @@
 from pathlib import Path
+import numpy as np
 import pandas as pd
 import folium
 import json
@@ -79,7 +80,16 @@ for feature in tqdm(geojson["features"]):
 for feature in to_delete:
     geojson["features"].remove(feature)
 
-color_scale = cm.linear.RdBu_10.scale(0, 100)  # Adjust scale range as needed
+# color_scale = cm.linear.RdBu_10.scale(0, 100)  # Adjust scale range as needed
+
+bins = np.linspace(0, 100, 12)  # 11 bins from 0 to 100
+color_scale = cm.StepColormap(
+    colors=cm.linear.RdBu_11.colors,  # Use the RdBu colormap with 11 colors
+    index=bins,
+    vmin=0,
+    vmax=100,
+    caption="Percentage of Vote Won by DFL (%)",
+)
 
 m = folium.Map(location=[46.2, -93.093124], zoom_start=7)
 
