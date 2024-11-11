@@ -55,6 +55,16 @@ for feature in tqdm(geojson["features"]):
     feature["properties"]["HarrisVotes"] = int(harris_data["Votes"])
     feature["properties"]["TrumpPerc"] = float(trump_data["Perc"])
     feature["properties"]["TrumpVotes"] = int(trump_data["Votes"])
+    
+    del feature["properties"]["Precinct"]
+    del feature["properties"]["PrecinctID"]
+    del feature["properties"]["County"]    
+    del feature["properties"]["CountyID"]
+    del feature["properties"]["CongDist"]
+    del feature["properties"]["MNSenDist"]
+    del feature["properties"]["MNLegDist"]
+    del feature["properties"]["CtyComDist"]
+    
     if harris_data.Total == 0:
         to_delete.append(feature)
 
