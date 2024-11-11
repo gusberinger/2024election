@@ -3,6 +3,7 @@ import pandas as pd
 import folium
 import json
 from tqdm import tqdm
+import branca.colormap as cm
 
 build_folder = Path(__file__).parent / "build"
 build_folder.mkdir(exist_ok=True)
@@ -78,23 +79,30 @@ for feature in tqdm(geojson["features"]):
 for feature in to_delete:
     geojson["features"].remove(feature)
 
+color_scale = cm.linear.RdBu_10.scale(0, 100)  # Adjust scale range as needed
+
 m = folium.Map(location=[46.2, -93.093124], zoom_start=7)
-choropleth = folium.Choropleth(
-    geo_data=geojson,
-    data=election[election["Party"] == "DFL"],
-    columns=["PrecinctCountyCode", "Perc"],
-    key_on="feature.properties.PrecinctCountyCode",
-    fill_color="RdBu",
-    fill_opacity=0.7,
-    bins=10,
-    overlay=True,
-    legend_name="Percentage of Vote Won by DFL (%)",
-)
+
+def style_function(feature):
+    total = feature["properties"].get("Total")
+    harris_perc = feature["properties"].get("HarrisPerc")
+    if total > 0:
+        fill_color = color_scale(harris_perc)
+    else:
+        fill_color = "transparent"
+    return {
+        "fillColor": fill_color,
+        "color": "black",
+        "weight": 1,
+        "fillOpacity": 0.7,
+    }
+
 geojson_layer = folium.GeoJson(
     geojson,
+    style_function=style_function,
     tooltip=folium.GeoJsonTooltip(
         fields=[
-            "PrecinctCountyCode",
+            "Precinct",
             "HarrisVotes",
             "TrumpVotes",
             "HarrisPerc",
@@ -111,10 +119,10 @@ geojson_layer = folium.GeoJson(
         ],
         localize=True,
     ),
-    style_function=lambda x: {"fillOpacity": 0, "color": "transparent"},
 )
 
-choropleth.add_to(m)
+color_scale.caption = "Percentage of Vote Won by DFL (%)"
+color_scale.add_to(m)
 geojson_layer.add_to(m)
 
 m.save(build_folder / "index.html")
