@@ -56,7 +56,6 @@ for feature in tqdm(geojson["features"]):
     feature["properties"]["TrumpPerc"] = float(trump_data["Perc"])
     feature["properties"]["TrumpVotes"] = int(trump_data["Votes"])
     
-    del feature["properties"]["Precinct"]
     del feature["properties"]["PrecinctID"]
     del feature["properties"]["County"]    
     del feature["properties"]["CountyID"]
@@ -89,8 +88,8 @@ choropleth = folium.Choropleth(
 geojson_layer = folium.GeoJson(
     geojson,
     tooltip=folium.GeoJsonTooltip(
-        fields=['PrecinctCountyCode', 'HarrisVotes', 'TrumpVotes', 'HarrisPerc', 'TrumpPerc', 'Total'],
-        aliases=['Precinct Code:', 'Harris Votes:', 'Trump Votes:', 'Harris %:', 'Trump %:', 'Total Votes:'],
+        fields=['Precinct', 'HarrisVotes', 'TrumpVotes', 'HarrisPerc', 'TrumpPerc', 'Total'],
+        aliases=['Precinct:', 'Harris Votes:', 'Trump Votes:', 'Harris %:', 'Trump %:', 'Total Votes:'],
         localize=True
     ),
     style_function=lambda x: {
