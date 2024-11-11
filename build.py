@@ -93,7 +93,7 @@ def style_function(feature):
     return {
         "fillColor": fill_color,
         "color": "black",
-        "weight": 1,
+        "weight": 0.325,
         "fillOpacity": 0.7,
     }
 
